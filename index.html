@@ -82,6 +82,13 @@
             background: #333;
             color: #fff;
         }
+        figcaption {
+            font-weight: bold; /* 设置标题加粗 */
+            font-size: 20px;    /* 设置标题的字体大小 */
+            color: darkblue;    /* 设置标题的颜色 */
+            text-align: center; /* 设置标题居中 */
+            margin-top: 10px;   /* 设置标题与图像之间的间距 */
+        }
         table { margin: 20px auto; border-collapse: collapse; width: 80%; }
         th, td { border: 1px solid #ddd; padding: 8px; }
         audio { width: 100%; } /* Adjust audio player size */
@@ -117,16 +124,25 @@
     <div class="container">
         <div class="hero">
             <h1 id="abstract">Abstract</h1>
-            <p style="text-align: justify;">Recent advancements in singing voice conversion (SVC) have focused on achieving zero-shot, any-to-any voice transformation capabilities. Many approaches attempt to modify voice characteristics by incorporating global timbre variables into acoustic models. However, these methods often depend heavily on the capabilities of timbre extractors and lack an understanding of temporal local information. This limitation poses challenges, particularly in replicating specific voice qualities such as those of children. To address this issue, we introduce InvoxSVC, a latent flow matching model (LFM) designed for rapid and precise singing voice conversion with a particular emphasis on capturing temporal local features. By integrating in-context learning during inference, InvoxSVC enhances the model's ability to grasp temporal nuances. Additionally, the model employs a pre-trained high-fidelity variational autoencoder (VAE) to improve waveform generation. In comparative evaluations, InvoxSVC outperforms the open-source project So-VITS-SVC in both objective and subjective assessments.</p>
-            <img src="image/model_overview.png" alt="Invox Overview" width="900" />
+            <p style="text-align: justify;">
+                Recent advancements in singing voice conversion (SVC) have focused on achieving zero-shot, any-to-any voice transformation capabilities. Many approaches attempt to modify voice characteristics by incorporating global timbre variables into acoustic models. However, these methods often depend heavily on the capabilities of timbre extractors and lack an understanding of temporal local information. This limitation poses challenges, particularly in replicating specific voice qualities such as those of children. To address this issue, we introduce InvoxSVC, a latent flow matching model (LFM) designed for rapid and precise singing voice conversion with a particular emphasis on capturing temporal local features. 
+                While reducing the residual timbral information in the source singing encoding through singer-guidance, InvoxSVC enhances the model's ability to capture temporal nuances by integrating in-context learning during inference.
+                Additionally, the model employs a pre-trained high-fidelity variational autoencoder (VAE) to improve waveform generation. In comparative evaluations, InvoxSVC outperforms the open-source project So-VITS-SVC in both objective and subjective assessments.
+            </p>
+            <!-- <figure>
+                <img src="image/model_overview.png" alt="Invox Overview" width="900" />
+                <figcaption>Fig 1: Overview of InvoxSVC</figcaption>
+            </figure>
+            <figure>
+                <img src="image/inference.png" alt="Invox Inference" width="600" />
+                <figcaption>Fig 2: In-Context Learning Inference with Singer-Guidance</figcaption>
+            </figure> -->
+            <img src="image/overview_inference.png" alt="Invox" style="max-width: 100%; height: auto;" />
             <h2 style="text-align: left;"><strong>Table of Contents</strong></h2>
             <ol style="text-align: left;">
                 <li><a href="#abstract" style="font-size: 20px;">Abstract</a></li>
                 <li><a href="#statement" style="font-size: 20px;">Notes</a></li>
-                <li><a href="#Girl" style="font-size: 20px;">Target: Girl</a></li>
-                <li><a href="#Boy" style="font-size: 20px;">Target: Boy</a></li>
-                <li><a href="#Female" style="font-size: 20px;">Target: Female</a></li>
-                <li><a href="#Male" style="font-size: 20px;">Target: Male</a></li>
+                <li><a href="#InvoxSVC" style="font-size: 20px;">InvoxSVC Performance</a></li>
             </ol>
         </div>
 
@@ -137,101 +153,96 @@
                 <li>We utilized an internal dataset consisting of 200 hours of singing in Chinese from 10,000 non-professional singers, with each singer contributing about one minute of singing.</li>
                 <li>The source and target samples used for inference both contain noise.</li>
                 <li>The InvoxSVC captures more temporal information, especially in the pronunciation details of children.</li>
+                <li>The capture of such temporal information is also reflected in InvoxSVC, where it captures the target's recording environment features when the prompt is added.</li>
             </p>
         </div>
 
         <div class="section">
-            <h2 id="Girl">Target Girl</h2>
+            <h2 id="InvoxSVC">The SVC Performance of InvoxSVC</h2>
             <table style="margin-top: 20px;">
                 <tr>
-                    <th colspan="5" style="text-align: center;"><strong>Target Girl</strong><audio controls src="demo/tgt/girl.wav"></audio></th>
+                    <th style="text-align: center; width: 12.5%;"><strong>Source</strong></th>
+                    <th style="text-align: center; width: 12.5%;"><strong>Target</strong></th>
+                    <th style="text-align: center; width: 12.5%;"><strong>InvoxSVC (&omega;=1.5)</strong></th>
+                    <th style="text-align: center; width: 12.5%;"><strong>InvoxSVC (&omega;=1)</strong></th>
+                    <th style="text-align: center; width: 12.5%;"><strong>InvoxSVC (&omega;=1.5) w/o prompt</strong></th>
+                    <th style="text-align: center; width: 12.5%;"><strong>InvoxSVC (&omega;=1) w/o prompt</strong></th>
+                    <th style="text-align: center; width: 12.5%;"><strong>DiffSVC</strong></th>
+                    <th style="text-align: center; width: 12.5%;"><strong>So-VITS-SVC (&omega;=1.5)</strong></th>
                 </tr>
                 <tr>
-                    <td style="text-align: center; width: 20%;"><strong>Female Source</strong><audio controls src="demo/src/1759092_2975658733737046806_done_5_16k.wav"></audio></td>
-                    <td style="text-align: center; width: 20%;">InvoxSVC<audio controls src="demo/invox_demo/invox_cosy_split_wespk/girl_1759092_2975658733737046806_done_5_16k.wav"></audio></td>
-                    <td style="text-align: center; width: 20%;">InvoxSVC w/o prompt<audio controls src="demo/invox_demo/invox_cosy_split_wespk_noifp/girl_1759092_2975658733737046806_done_5_16k.wav"></audio></td>
-                    <td style="text-align: center; width: 20%;">DiffSVC<audio controls src="demo/invox_demo/invox_diffsvc/girl_1759092_2975658733737046806_done_5_16k.wav"></audio></td>
-                    <td style="text-align: center; width: 20%;">So-VITS-SVC<audio controls src="demo/invox_demo/invox_so-vits-svc/girl_1759092_2975658733737046806_done_5_16k.wav"></audio></td>
+                    <td style="text-align: center; width: 12.5%;"><audio controls src="demo/src/1868033_0000000002147483647.wav"></audio></td>
+                    <td style="text-align: center; width: 12.5%;"><audio controls src="demo/tgt/aJ0Dc83zuepSv6SfUD0AzuiKOMG3nLklT_KehV2-ic4.wav"></audio></td>
+                    <td style="text-align: center; width: 12.5%;"><audio controls src="demo/invox_demo/invox_cosy_split_wespk_sg/aJ0Dc83zuepSv6SfUD0AzuiKOMG3nLklT_KehV2-ic4_1868033_0000000002147483647.wav"></audio></td>
+                    <td style="text-align: center; width: 12.5%;"><audio controls src="demo/invox_demo/invox_cosy_split_wespk/aJ0Dc83zuepSv6SfUD0AzuiKOMG3nLklT_KehV2-ic4_1868033_0000000002147483647.wav"></audio></td>
+                    <td style="text-align: center; width: 12.5%;"><audio controls src="demo/invox_demo/invox_cosy_split_wespk_noifp_sg/aJ0Dc83zuepSv6SfUD0AzuiKOMG3nLklT_KehV2-ic4_1868033_0000000002147483647.wav"></audio></td>
+                    <td style="text-align: center; width: 12.5%;"><audio controls src="demo/invox_demo/invox_cosy_split_wespk_noifp/aJ0Dc83zuepSv6SfUD0AzuiKOMG3nLklT_KehV2-ic4_1868033_0000000002147483647.wav"></audio></td>
+                    <td style="text-align: center; width: 12.5%;"><audio controls src="demo/invox_demo/invox_diffsvc/aJ0Dc83zuepSv6SfUD0AzuiKOMG3nLklT_KehV2-ic4_1868033_0000000002147483647.wav"></audio></td>
+                    <td style="text-align: center; width: 12.5%;"><audio controls src="demo/invox_demo/invox_so-vits-svc/aJ0Dc83zuepSv6SfUD0AzuiKOMG3nLklT_KehV2-ic4_1868033_0000000002147483647.wav"></audio></td>
                 </tr>
                 <tr>
-                    <td style="text-align: center; width: 20%;"><strong>Male Source</strong><audio controls src="demo/src/4584226616447115364_2.wav"></audio></td>
-                    <td style="text-align: center; width: 20%;">InvoxSVC<audio controls src="demo/invox_demo/invox_cosy_split_wespk/girl_4584226616447115364_2.wav"></audio></td>
-                    <td style="text-align: center; width: 20%;">InvoxSVC w/o prompt<audio controls src="demo/invox_demo/invox_cosy_split_wespk_noifp/girl_4584226616447115364_2.wav"></audio></td>
-                    <td style="text-align: center; width: 20%;">DiffSVC<audio controls src="demo/invox_demo/invox_diffsvc/girl_4584226616447115364_2.wav"></audio></td>
-                    <td style="text-align: center; width: 20%;">So-VITS-SVC<audio controls src="demo/invox_demo/invox_so-vits-svc/girl_4584226616447115364_2.wav"></audio></td>
+                    <td style="text-align: center; width: 12.5%;"><audio controls src="demo/src/2134356_0000000002147483647.wav"></audio></td>
+                    <td style="text-align: center; width: 12.5%;"><audio controls src="demo/tgt/SDJAaT_zNtc4fVSfCjHvWnlxAONGfzKlnutpIeJAuKs.wav"></audio></td>
+                    <td style="text-align: center; width: 12.5%;"><audio controls src="demo/invox_demo/invox_cosy_split_wespk_sg/SDJAaT_zNtc4fVSfCjHvWnlxAONGfzKlnutpIeJAuKs_2134356_0000000002147483647.wav"></audio></td>
+                    <td style="text-align: center; width: 12.5%;"><audio controls src="demo/invox_demo/invox_cosy_split_wespk/SDJAaT_zNtc4fVSfCjHvWnlxAONGfzKlnutpIeJAuKs_2134356_0000000002147483647.wav"></audio></td>
+                    <td style="text-align: center; width: 12.5%;"><audio controls src="demo/invox_demo/invox_cosy_split_wespk_noifp_sg/SDJAaT_zNtc4fVSfCjHvWnlxAONGfzKlnutpIeJAuKs_2134356_0000000002147483647.wav"></audio></td>
+                    <td style="text-align: center; width: 12.5%;"><audio controls src="demo/invox_demo/invox_cosy_split_wespk_noifp/SDJAaT_zNtc4fVSfCjHvWnlxAONGfzKlnutpIeJAuKs_2134356_0000000002147483647.wav"></audio></td>
+                    <td style="text-align: center; width: 12.5%;"><audio controls src="demo/invox_demo/invox_diffsvc/SDJAaT_zNtc4fVSfCjHvWnlxAONGfzKlnutpIeJAuKs_2134356_0000000002147483647.wav"></audio></td>
+                    <td style="text-align: center; width: 12.5%;"><audio controls src="demo/invox_demo/invox_so-vits-svc/SDJAaT_zNtc4fVSfCjHvWnlxAONGfzKlnutpIeJAuKs_2134356_0000000002147483647.wav"></audio></td>
                 </tr>
+                <tr>
+                    <td style="text-align: center; width: 12.5%;"><audio controls src="demo/src/1868748_6704597038050948794_2.wav"></audio></td>
+                    <td style="text-align: center; width: 12.5%;"><audio controls src="demo/tgt/iK9elS59HGY-78tId6MD3xtnnvIs4W_zaRdV9LYoyr4.wav"></audio></td>
+                    <td style="text-align: center; width: 12.5%;"><audio controls src="demo/invox_demo/invox_cosy_split_wespk_sg/iK9elS59HGY-78tId6MD3xtnnvIs4W_zaRdV9LYoyr4_1868748_6704597038050948794_2.wav"></audio></td>
+                    <td style="text-align: center; width: 12.5%;"><audio controls src="demo/invox_demo/invox_cosy_split_wespk/iK9elS59HGY-78tId6MD3xtnnvIs4W_zaRdV9LYoyr4_1868748_6704597038050948794_2.wav"></audio></td>
+                    <td style="text-align: center; width: 12.5%;"><audio controls src="demo/invox_demo/invox_cosy_split_wespk_noifp_sg/iK9elS59HGY-78tId6MD3xtnnvIs4W_zaRdV9LYoyr4_1868748_6704597038050948794_2.wav"></audio></td>
+                    <td style="text-align: center; width: 12.5%;"><audio controls src="demo/invox_demo/invox_cosy_split_wespk_noifp/iK9elS59HGY-78tId6MD3xtnnvIs4W_zaRdV9LYoyr4_1868748_6704597038050948794_2.wav"></audio></td>
+                    <td style="text-align: center; width: 12.5%;"><audio controls src="demo/invox_demo/invox_diffsvc/iK9elS59HGY-78tId6MD3xtnnvIs4W_zaRdV9LYoyr4_1868748_6704597038050948794_2.wav"></audio></td>
+                    <td style="text-align: center; width: 12.5%;"><audio controls src="demo/invox_demo/invox_so-vits-svc/iK9elS59HGY-78tId6MD3xtnnvIs4W_zaRdV9LYoyr4_1868748_6704597038050948794_2.wav"></audio></td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; width: 12.5%;"><audio controls src="demo/src/2086786_0000000002147483647.wav"></audio></td>
+                    <td style="text-align: center; width: 12.5%;"><audio controls src="demo/tgt/GWcfk0Ex1apH8VUUg0qlwz3Mo_aHni4bzTzprWNHfEs.wav"></audio></td>
+                    <td style="text-align: center; width: 12.5%;"><audio controls src="demo/invox_demo/invox_cosy_split_wespk_sg/GWcfk0Ex1apH8VUUg0qlwz3Mo_aHni4bzTzprWNHfEs_2086786_0000000002147483647.wav"></audio></td>
+                    <td style="text-align: center; width: 12.5%;"><audio controls src="demo/invox_demo/invox_cosy_split_wespk/GWcfk0Ex1apH8VUUg0qlwz3Mo_aHni4bzTzprWNHfEs_2086786_0000000002147483647.wav"></audio></td>
+                    <td style="text-align: center; width: 12.5%;"><audio controls src="demo/invox_demo/invox_cosy_split_wespk_noifp_sg/GWcfk0Ex1apH8VUUg0qlwz3Mo_aHni4bzTzprWNHfEs_2086786_0000000002147483647.wav"></audio></td>
+                    <td style="text-align: center; width: 12.5%;"><audio controls src="demo/invox_demo/invox_cosy_split_wespk_noifp/GWcfk0Ex1apH8VUUg0qlwz3Mo_aHni4bzTzprWNHfEs_2086786_0000000002147483647.wav"></audio></td>
+                    <td style="text-align: center; width: 12.5%;"><audio controls src="demo/invox_demo/invox_diffsvc/GWcfk0Ex1apH8VUUg0qlwz3Mo_aHni4bzTzprWNHfEs_2086786_0000000002147483647.wav"></audio></td>
+                    <td style="text-align: center; width: 12.5%;"><audio controls src="demo/invox_demo/invox_so-vits-svc/GWcfk0Ex1apH8VUUg0qlwz3Mo_aHni4bzTzprWNHfEs_2086786_0000000002147483647.wav"></audio></td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; width: 12.5%;"><audio controls src="demo/src/1994138_6265491506727204857_2.wav"></audio></td>
+                    <td style="text-align: center; width: 12.5%;"><audio controls src="demo/tgt/g5VBPD5L57N_YtPxrmpYF7CCvtFvU33QF3VNEr5Nzag.wav"></audio></td>
+                    <td style="text-align: center; width: 12.5%;"><audio controls src="demo/invox_demo/invox_cosy_split_wespk_sg/g5VBPD5L57N_YtPxrmpYF7CCvtFvU33QF3VNEr5Nzag_1994138_6265491506727204857_2.wav"></audio></td>
+                    <td style="text-align: center; width: 12.5%;"><audio controls src="demo/invox_demo/invox_cosy_split_wespk/g5VBPD5L57N_YtPxrmpYF7CCvtFvU33QF3VNEr5Nzag_1994138_6265491506727204857_2.wav"></audio></td>
+                    <td style="text-align: center; width: 12.5%;"><audio controls src="demo/invox_demo/invox_cosy_split_wespk_noifp_sg/g5VBPD5L57N_YtPxrmpYF7CCvtFvU33QF3VNEr5Nzag_1994138_6265491506727204857_2.wav"></audio></td>
+                    <td style="text-align: center; width: 12.5%;"><audio controls src="demo/invox_demo/invox_cosy_split_wespk_noifp/g5VBPD5L57N_YtPxrmpYF7CCvtFvU33QF3VNEr5Nzag_1994138_6265491506727204857_2.wav"></audio></td>
+                    <td style="text-align: center; width: 12.5%;"><audio controls src="demo/invox_demo/invox_diffsvc/g5VBPD5L57N_YtPxrmpYF7CCvtFvU33QF3VNEr5Nzag_1994138_6265491506727204857_2.wav"></audio></td>
+                    <td style="text-align: center; width: 12.5%;"><audio controls src="demo/invox_demo/invox_so-vits-svc/g5VBPD5L57N_YtPxrmpYF7CCvtFvU33QF3VNEr5Nzag_1994138_6265491506727204857_2.wav"></audio></td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; width: 12.5%;"><audio controls src="demo/src/1869914_-00000002147483648.wav"></audio></td>
+                    <td style="text-align: center; width: 12.5%;"><audio controls src="demo/tgt/4393200451488340426.wav"></audio></td>
+                    <td style="text-align: center; width: 12.5%;"><audio controls src="demo/invox_demo/invox_cosy_split_wespk_sg/4393200451488340426_1869914_-00000002147483648.wav"></audio></td>
+                    <td style="text-align: center; width: 12.5%;"><audio controls src="demo/invox_demo/invox_cosy_split_wespk/4393200451488340426_1869914_-00000002147483648.wav"></audio></td>
+                    <td style="text-align: center; width: 12.5%;"><audio controls src="demo/invox_demo/invox_cosy_split_wespk_noifp_sg/4393200451488340426_1869914_-00000002147483648.wav"></audio></td>
+                    <td style="text-align: center; width: 12.5%;"><audio controls src="demo/invox_demo/invox_cosy_split_wespk_noifp/4393200451488340426_1869914_-00000002147483648.wav"></audio></td>
+                    <td style="text-align: center; width: 12.5%;"><audio controls src="demo/invox_demo/invox_diffsvc/4393200451488340426_1869914_-00000002147483648.wav"></audio></td>
+                    <td style="text-align: center; width: 12.5%;"><audio controls src="demo/invox_demo/invox_so-vits-svc/4393200451488340426_1869914_-00000002147483648.wav"></audio></td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; width: 12.5%;"><audio controls src="demo/src/2152424_5991128691394508981_2.wav"></audio></td>
+                    <td style="text-align: center; width: 12.5%;"><audio controls src="demo/tgt/8260286322220410711_1.wav"></audio></td>
+                    <td style="text-align: center; width: 12.5%;"><audio controls src="demo/invox_demo/invox_cosy_split_wespk_sg/8260286322220410711_1_2152424_5991128691394508981_2.wav"></audio></td>
+                    <td style="text-align: center; width: 12.5%;"><audio controls src="demo/invox_demo/invox_cosy_split_wespk/8260286322220410711_1_2152424_5991128691394508981_2.wav"></audio></td>
+                    <td style="text-align: center; width: 12.5%;"><audio controls src="demo/invox_demo/invox_cosy_split_wespk_noifp_sg/8260286322220410711_1_2152424_5991128691394508981_2.wav"></audio></td>
+                    <td style="text-align: center; width: 12.5%;"><audio controls src="demo/invox_demo/invox_cosy_split_wespk_noifp/8260286322220410711_1_2152424_5991128691394508981_2.wav"></audio></td>
+                    <td style="text-align: center; width: 12.5%;"><audio controls src="demo/invox_demo/invox_diffsvc/8260286322220410711_1_2152424_5991128691394508981_2.wav"></audio></td>
+                    <td style="text-align: center; width: 12.5%;"><audio controls src="demo/invox_demo/invox_so-vits-svc/8260286322220410711_1_2152424_5991128691394508981_2.wav"></audio></td>
+                </tr>
+                
             </table>
         </div>
-
-        <div class="section">
-            <h2 id="Boy">Target Boy</h2>
-            <table style="margin-top: 20px;">
-                <tr>
-                    <th colspan="5" style="text-align: center;"><strong>Target Boy</strong><audio controls src="demo/tgt/boy.wav"></audio></th>
-                </tr>
-                <tr>
-                    <td style="text-align: center; width: 20%;"><strong>Female Source</strong><audio controls src="demo/src/1759092_2975658733737046806_done_5_16k.wav"></audio></td>
-                    <td style="text-align: center; width: 20%;">InvoxSVC<audio controls src="demo/invox_demo/invox_cosy_split_wespk/boy_1759092_2975658733737046806_done_5_16k.wav"></audio></td>
-                    <td style="text-align: center; width: 20%;">InvoxSVC w/o prompt<audio controls src="demo/invox_demo/invox_cosy_split_wespk_noifp/boy_1759092_2975658733737046806_done_5_16k.wav"></audio></td>
-                    <td style="text-align: center; width: 20%;">DiffSVC<audio controls src="demo/invox_demo/invox_diffsvc/boy_1759092_2975658733737046806_done_5_16k.wav"></audio></td>
-                    <td style="text-align: center; width: 20%;">So-VITS-SVC<audio controls src="demo/invox_demo/invox_so-vits-svc/boy_1759092_2975658733737046806_done_5_16k.wav"></audio></td>
-                </tr>
-                <tr>
-                    <td style="text-align: center; width: 20%;"><strong>Male Source</strong><audio controls src="demo/src/4584226616447115364_2.wav"></audio></td>
-                    <td style="text-align: center; width: 20%;">InvoxSVC<audio controls src="demo/invox_demo/invox_cosy_split_wespk/boy_4584226616447115364_2.wav"></audio></td>
-                    <td style="text-align: center; width: 20%;">InvoxSVC w/o prompt<audio controls src="demo/invox_demo/invox_cosy_split_wespk_noifp/boy_4584226616447115364_2.wav"></audio></td>
-                    <td style="text-align: center; width: 20%;">DiffSVC<audio controls src="demo/invox_demo/invox_diffsvc/boy_4584226616447115364_2.wav"></audio></td>
-                    <td style="text-align: center; width: 20%;">So-VITS-SVC<audio controls src="demo/invox_demo/invox_so-vits-svc/boy_4584226616447115364_2.wav"></audio></td>
-                </tr>
-            </table>
-        </div>
-
-        <div class="section">
-            <h2 id="Female">Target Female</h2>
-            <table style="margin-top: 20px;">
-                <tr>
-                    <th colspan="5" style="text-align: center;"><strong>Target Female</strong><audio controls src="demo/tgt/female.wav"></audio></th>
-                </tr>
-                <tr>
-                    <td style="text-align: center; width: 20%;"><strong>Female Source</strong><audio controls src="demo/src/1759092_2975658733737046806_done_5_16k.wav"></audio></td>
-                    <td style="text-align: center; width: 20%;">InvoxSVC<audio controls src="demo/invox_demo/invox_cosy_split_wespk/female_1759092_2975658733737046806_done_5_16k.wav"></audio></td>
-                    <td style="text-align: center; width: 20%;">InvoxSVC w/o prompt<audio controls src="demo/invox_demo/invox_cosy_split_wespk_noifp/female_1759092_2975658733737046806_done_5_16k.wav"></audio></td>
-                    <td style="text-align: center; width: 20%;">DiffSVC<audio controls src="demo/invox_demo/invox_diffsvc/female_1759092_2975658733737046806_done_5_16k.wav"></audio></td>
-                    <td style="text-align: center; width: 20%;">So-VITS-SVC<audio controls src="demo/invox_demo/invox_so-vits-svc/female_1759092_2975658733737046806_done_5_16k.wav"></audio></td>
-                </tr>
-                <tr>
-                    <td style="text-align: center; width: 20%;"><strong>Male Source</strong><audio controls src="demo/src/4584226616447115364_2.wav"></audio></td>
-                    <td style="text-align: center; width: 20%;">InvoxSVC<audio controls src="demo/invox_demo/invox_cosy_split_wespk/female_4584226616447115364_2.wav"></audio></td>
-                    <td style="text-align: center; width: 20%;">InvoxSVC w/o prompt<audio controls src="demo/invox_demo/invox_cosy_split_wespk_noifp/female_4584226616447115364_2.wav"></audio></td>
-                    <td style="text-align: center; width: 20%;">DiffSVC<audio controls src="demo/invox_demo/invox_diffsvc/female_4584226616447115364_2.wav"></audio></td>
-                    <td style="text-align: center; width: 20%;">So-VITS-SVC<audio controls src="demo/invox_demo/invox_so-vits-svc/female_4584226616447115364_2.wav"></audio></td>
-                </tr>
-            </table>
-        </div>
-
-        <div class="section">
-            <h2 id="Male">Target Male</h2>
-            <table style="margin-top: 20px;">
-                <tr>
-                    <th colspan="5" style="text-align: center;"><strong>Target Male</strong><audio controls src="demo/tgt/male.wav"></audio></th>
-                </tr>
-                <tr>
-                    <td style="text-align: center; width: 20%;"><strong>Female Source</strong><audio controls src="demo/src/1759092_2975658733737046806_done_5_16k.wav"></audio></td>
-                    <td style="text-align: center; width: 20%;">InvoxSVC<audio controls src="demo/invox_demo/invox_cosy_split_wespk/male_1759092_2975658733737046806_done_5_16k.wav"></audio></td>
-                    <td style="text-align: center; width: 20%;">InvoxSVC w/o prompt<audio controls src="demo/invox_demo/invox_cosy_split_wespk_noifp/male_1759092_2975658733737046806_done_5_16k.wav"></audio></td>
-                    <td style="text-align: center; width: 20%;">DiffSVC<audio controls src="demo/invox_demo/invox_diffsvc/male_1759092_2975658733737046806_done_5_16k.wav"></audio></td>
-                    <td style="text-align: center; width: 20%;">So-VITS-SVC<audio controls src="demo/invox_demo/invox_so-vits-svc/male_1759092_2975658733737046806_done_5_16k.wav"></audio></td></tr>
-                <tr>
-                    <td style="text-align: center; width: 20%;"><strong>Male Source</strong><audio controls src="demo/src/4584226616447115364_2.wav"></audio></td>
-                    <td style="text-align: center; width: 20%;">InvoxSVC<audio controls src="demo/invox_demo/invox_cosy_split_wespk/male_4584226616447115364_2.wav"></audio></td>
-                    <td style="text-align: center; width: 20%;">InvoxSVC w/o prompt<audio controls src="demo/invox_demo/invox_cosy_split_wespk_noifp/male_4584226616447115364_2.wav"></audio></td>
-                    <td style="text-align: center; width: 20%;">DiffSVC<audio controls src="demo/invox_demo/invox_diffsvc/male_4584226616447115364_2.wav"></audio></td>
-                    <td style="text-align: center; width: 20%;">So-VITS-SVC<audio controls src="demo/invox_demo/invox_so-vits-svc/male_4584226616447115364_2.wav"></audio></td>
-                </tr>
-            </table>
-        </div>
-
-        
     </div>
 
     <footer>
